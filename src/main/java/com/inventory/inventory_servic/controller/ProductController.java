@@ -1,9 +1,10 @@
 package com.inventory.inventory_servic.controller;
 
-import com.inventory.inventory_servic.dto.RequestChangeCategory;
-import com.inventory.inventory_servic.dto.RequestProductDTO;
-import com.inventory.inventory_servic.dto.RequestUpdataPrice;
-import com.inventory.inventory_servic.dto.ResponseProductDTO;
+import com.inventory.inventory_servic.dto.request.RequestChangeCategory;
+import com.inventory.inventory_servic.dto.request.RequestChangeTypeDTO;
+import com.inventory.inventory_servic.dto.request.RequestProductDTO;
+import com.inventory.inventory_servic.dto.request.RequestUpdataPrice;
+import com.inventory.inventory_servic.dto.response.ResponseProductDTO;
 import com.inventory.inventory_servic.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -11,14 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-
 @RestController
 @AllArgsConstructor
-@RequestMapping("/product")
+@RequestMapping("/products")
 public class ProductController {
 
-    ProductService productService;
+   private final ProductService productService;
 
     @PostMapping("/add-product")
     public ResponseEntity<ResponseProductDTO> addProduct(@RequestBody @Valid RequestProductDTO requestProductDTO){
@@ -46,5 +45,20 @@ public class ProductController {
 
         productService.changeCategory(id, requestChangeCategory);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PatchMapping("/{id}/type")
+    public ResponseEntity<?> changeType(@Valid @PathVariable long id, @RequestBody RequestChangeTypeDTO changeTypeDTO){
+
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getProduct(@Valid @PathVariable long id){
+
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllProducts(){
+
     }
 }

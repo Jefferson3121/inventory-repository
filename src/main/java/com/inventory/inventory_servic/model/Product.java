@@ -3,10 +3,12 @@ package com.inventory.inventory_servic.model;
 import jakarta.persistence.*;
 
 import lombok.*;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -28,21 +30,27 @@ public class Product {
     private Unit unit;
 
     @Setter(AccessLevel.NONE)
-    private BigDecimal netContent;// CAmbiar nombre en la BD 🧿
+    private BigDecimal netContent;
+
 
     private BigDecimal price;
 
-    //hacer lo de one to many y viceversa
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
 
-    private  ProductType  type;
+    private ProductType type;
 
     private boolean available;  // Valor por defecto false, lo efine la cantidad que hay en el stock
-    //Agregar que jpa no haga las actualizacines automaticamente
 
+    //LO de mani to many
+    private List<Supplier> suppliers;
 
+    @Setter(AccessLevel.NONE)
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updateAt;
 
@@ -53,30 +61,8 @@ public class Product {
         this.netContent = netContent;
         this.price = price;
         this.category = category;
+        this.type = type;
+        this.suppliers = new ArrayList<>();
         this.available = false;
     }
-
-
-
-
-    @Override
-    public boolean equals(Object obj){
-        if (this == obj) return true;
-
-        if (!(obj instanceof  Product)){
-            return false;
-        }
-
-        Product other = (Product) obj;
-
-        return  Objects.equals(this.name, other.name)
-                && Objects.equals(this.brand, other.brand)
-                && Objects.equals(this.unit, other.unit);
-    }
-
-    @Override
-    public int  hashCode(){
-        return Objects.hash(this.name,this.brand,this.unit);
-    }
-
 }

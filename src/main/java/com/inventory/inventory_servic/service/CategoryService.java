@@ -1,16 +1,15 @@
 package com.inventory.inventory_servic.service;
 
-public class CategoryService {
+import com.inventory.inventory_servic.dto.request.RequestCategoryDTO;
+import com.inventory.inventory_servic.dto.request.RequestUpdateDescriptionDTO;
 
-    public void addCategory(){
+public interface CategoryService {
 
-    }
+    public void addCategory(RequestCategoryDTO categoryDTO);
 
-    public void updateDescriptionCategory(){
+    public void updateDescription(long id, RequestUpdateDescriptionDTO newDescription);
 
-    }
+    public void activateCategory(long id);
 
-    public void deleteCategory(){
-
-    }
+    public void deleteCategory(long id);
 }

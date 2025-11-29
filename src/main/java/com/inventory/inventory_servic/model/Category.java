@@ -2,10 +2,11 @@ package com.inventory.inventory_servic.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@Getter @Setter
+@Getter
 @NoArgsConstructor
 @Entity
 public class Category {
@@ -17,15 +18,25 @@ public class Category {
     //    updated_at TIMESTAMP DEFAULT NOW()
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Setter(AccessLevel.NONE)
     private Integer id;
     private String name;
+
+    @Setter
     private String description;
-    //Lo de one to many para lo de las rfrencias por clave foranea de jpa
+
+    private String slug; //Agregar en bd
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
     private Category category;
-    @Setter(AccessLevel.NONE)
+
+    @Setter
+    private boolean active; //Agregar en BD
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @UpdateTimestamp
     @Setter(AccessLevel.NONE) @Column(name = "updated_at")
     private LocalDateTime updateAt;
 
@@ -33,11 +44,6 @@ public class Category {
     public Category(String name, String description){
         this.name = name;
         this.description = description;
+        this.active = false;
     }
-
-    public Category(String name){
-        this(name, null);
-    }
-
-
 }

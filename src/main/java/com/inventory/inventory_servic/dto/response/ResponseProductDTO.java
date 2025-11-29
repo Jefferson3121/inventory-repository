@@ -1,4 +1,4 @@
-package com.inventory.inventory_servic.dto;
+package com.inventory.inventory_servic.dto.response;
 
 import com.inventory.inventory_servic.model.Category;
 import com.inventory.inventory_servic.model.ProductType;

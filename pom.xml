@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.inventory</groupId>
-	<artifactId>inventory-servic</artifactId>
+	<artifactId>catalog-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>inventory-servic</name>
 	<description>Microservicio para la gestión de inventario y productos</description>
