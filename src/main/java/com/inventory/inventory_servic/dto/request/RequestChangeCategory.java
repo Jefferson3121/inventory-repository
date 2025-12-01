@@ -1,3 +1,5 @@
 package com.inventory.inventory_servic.dto.request;
 
-public record RequestChangeCategory(String category) { }
+import jakarta.validation.constraints.NotBlank;
+
+public record RequestChangeCategory(@NotBlank String category) { }

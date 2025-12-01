@@ -1,4 +1,6 @@
 package com.inventory.inventory_servic.dto.request;
 
-public record RequestUpdateDescriptionDTO(String description) {
+import jakarta.validation.constraints.NotBlank;
+
+public record RequestUpdateDescriptionDTO(@NotBlank String description) {
 }
