@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -45,6 +46,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void delete(Long id){
+        if ( id == null || id < 0) throw new RuntimeException("Id null o icorrecto");//mejorar excepcion y mensaje
+
         productRepository.deleteById(id); //Manejar excepciones cuando falla (averiguar cuals son esas posibles exepciones
     }
 
@@ -52,6 +55,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void updatePrice(Long id, RequestUpdataPrice requestUpdataPrice){
+
+        if ( id == null || id < 0) throw new RuntimeException("Id null o icorrecto");//mejorar excepcion y mensaje
 
         BigDecimal newPrice = requestUpdataPrice.price();
 
@@ -65,7 +70,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void changeCategory(long id, RequestChangeCategory requestChangeCategory){
+    public void changeCategory(Long id, RequestChangeCategory requestChangeCategory){
+
+        if ( id == null || id < 0) throw new RuntimeException("Id null o icorrecto");//mejorar excepcion y mensaje
 
          //dudas de que es lo que llega ya que es un objeto que debe estar creado pero el cliente solo manda el nombre
 
@@ -82,13 +89,33 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void changeType(long id, ProductType type){
+    @Transactional
+    public void changeType(Long id, ProductType type) {
+
+        if ( id == null || id < 0) throw new RuntimeException("Id null o icorrecto");//mejorar excepcion y mensaje
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no existe")); //mejorar excepcion y demas
+
+        product.setType(type);
+        productRepository.save(product);
+
     }
 
     @Override
-    public void getProduct(long id){
+    public ResponseProductDTO getProduct(Long id){
+
+
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no existe ")); // mejorar mensaje y perzonalizar exceocion
+        return  productMapper.toResponseProducDto(product);
     }
 
     @Override
-    public void getAllProducts(){}
-}
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+       }
+
+
+    }
