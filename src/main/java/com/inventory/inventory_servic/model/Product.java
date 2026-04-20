@@ -9,42 +9,41 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
-@Getter @Setter
+@Getter
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Setter(AccessLevel.NONE)
     private Long id;
 
-    @Setter(AccessLevel.NONE)
     private String name;
 
-    @Setter(AccessLevel.NONE)
     private String brand;
 
-    @Setter(AccessLevel.NONE)
     private Unit unit;
 
-    @Setter(AccessLevel.NONE)
     private BigDecimal netContent;
 
-
+    @Setter
     private BigDecimal price;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Setter
     private ProductType type;
 
+    @Setter
     private boolean available;  // Valor por defecto false, lo efine la cantidad que hay en el stock
 
-    //LO de mani to many
-    private List<Supplier> suppliers;
+
+    private String externalId;
 
     @Setter(AccessLevel.NONE)
     @Column(name = "created_at")
@@ -62,7 +61,7 @@ public class Product {
         this.price = price;
         this.category = category;
         this.type = type;
-        this.suppliers = new ArrayList<>();
+        this.externalId = UUID.randomUUID().toString();
         this.available = false;
     }
 }

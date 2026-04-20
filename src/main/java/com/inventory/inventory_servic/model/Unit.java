@@ -1,9 +1,12 @@
 package com.inventory.inventory_servic.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public enum Unit {
-    KG,
-    L,
-    UNIT,
+    GR,
+    ML,
+    UNI,
     BOX,
-    M
+
+
 }

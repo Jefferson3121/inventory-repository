@@ -5,8 +5,11 @@ import com.inventory.inventory_servic.dto.response.ResponseProductDTO;
 import com.inventory.inventory_servic.model.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper (componentModel = "spring")
+@Mapper (
+        componentModel = "spring",
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ProductMapper {
 
     @Mapping(target = "category", ignore = true)
