@@ -1,16 +1,26 @@
 package com.inventory.inventory_servic.service;
 
+
 import com.inventory.inventory_servic.dto.request.RequestCategoryDTO;
-import com.inventory.inventory_servic.dto.request.RequestUpdateDescriptionDTO;
 import com.inventory.inventory_servic.dto.response.ResponseCategoryDTO;
+
+import java.util.List;
 
 public interface CategoryService {
 
-    public ResponseCategoryDTO addCategory(RequestCategoryDTO categoryDTO);
+    public ResponseCategoryDTO createCategory(RequestCategoryDTO requestCategory);
 
-    public void updateDescription(Long id, RequestUpdateDescriptionDTO newDescription);
+    public ResponseCategoryDTO updateCategory(long id, RequestCategoryDTO requestCategoryDTO);
 
-    public void activateCategory(Integer id);
+    public ResponseCategoryDTO getCategory(long idCategory);
 
-    public void deleteCategory(Long id);
+    public void deleteCategory(long idCategory);
+
+    public List<ResponseCategoryDTO> getAllCategorys();
+
+
+
+
+
+
 }

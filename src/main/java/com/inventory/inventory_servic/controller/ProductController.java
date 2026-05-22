@@ -1,64 +1,79 @@
 package com.inventory.inventory_servic.controller;
 
-import com.inventory.inventory_servic.dto.request.RequestChangeCategory;
-import com.inventory.inventory_servic.dto.request.RequestChangeTypeDTO;
+import com.inventory.inventory_servic.component.ProductMapper;
+import com.inventory.inventory_servic.domain.Product;
 import com.inventory.inventory_servic.dto.request.RequestProductDTO;
-import com.inventory.inventory_servic.dto.request.RequestUpdataPrice;
+import com.inventory.inventory_servic.dto.request.RequestUpdateProductDTO;
 import com.inventory.inventory_servic.dto.response.ResponseProductDTO;
+import com.inventory.inventory_servic.dto.response.ResponseStockDTO;
 import com.inventory.inventory_servic.service.ProductService;
-import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+
+@RequiredArgsConstructor
 @RestController
-@AllArgsConstructor
-@RequestMapping("/products")
+@RequestMapping("/product")
 public class ProductController {
 
-   private final ProductService productService;
+    private final ProductService productService;
+    private final ProductMapper productMapper;
 
-    @PostMapping("/add-product")
-    public ResponseEntity<ResponseProductDTO> addProduct(@RequestBody @Valid RequestProductDTO requestProductDTO){
 
-        ResponseProductDTO created = productService.create(requestProductDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
-    }
+    @PostMapping()
+    public ResponseEntity<ResponseProductDTO> createProduct(@RequestBody RequestProductDTO requestProductDTO){
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+       Product product = productService.createProduct(productMapper.toProduc(requestProductDTO));
 
-        productService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    @PatchMapping("/{id}/price")
-    public ResponseEntity<?> updatePrice(@Valid @PathVariable Long id,@RequestBody RequestUpdataPrice price){
-
-        productService.updatePrice(id, price);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    @PatchMapping("/{id}/category")
-    public ResponseEntity<?> changeCategory(@Valid @PathVariable Long id, @RequestBody RequestChangeCategory requestChangeCategory){
-
-        productService.changeCategory(id, requestChangeCategory);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    @PatchMapping("/{id}/type")
-    public ResponseEntity<?> changeType(@Valid @PathVariable long id, @RequestBody RequestChangeTypeDTO changeTypeDTO){
+       return ResponseEntity.status(HttpStatus.CREATED).body(productMapper.toResponseProduct(product));
 
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getProduct(@Valid @PathVariable long id){
 
+    @PatchMapping
+    public ResponseEntity<ResponseProductDTO> updateProduct(@RequestBody RequestUpdateProductDTO updateProductDTO){
+
+        Product product = productService.updateProduct(productMapper.toUpdateProduct(updateProductDTO));
+
+        return ResponseEntity.status(HttpStatus.OK).body(productMapper.toResponseProduct(product));
     }
 
-    @GetMapping
-    public ResponseEntity<?> getAllProducts(){
-
+    @DeleteMapping("/id")
+    public ResponseEntity<Void> deleteProduct(@PathVariable long idProduct){
+        productService.deleteProduct(idProduct);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+
+
+
+    @GetMapping("/id")
+    public ResponseEntity<ResponseProductDTO> getByIdProduct(@PathVariable long idProduct){
+
+        Product product = productService.getByIdProduct(idProduct);
+        return ResponseEntity.status(HttpStatus.OK).body(productMapper.toResponseProduct(product));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<ResponseProductDTO>> getAllProducts(){
+
+        List<Product> products = productService.getAllProducts();
+
+        return ResponseEntity.status(HttpStatus.OK).body(productMapper.toProductDTOLIst(products));
+    }
+
+
+    @GetMapping("/stock")
+    public ResponseEntity<List<ResponseStockDTO>> getAllStock(){
+
+        List<Product> products = productService.getAllProducts();
+
+        return ResponseEntity.status(HttpStatus.OK).body(productMapper.toStockDTOList(products));
+    }
+
+
 }

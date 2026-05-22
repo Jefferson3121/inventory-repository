@@ -1,10 +1,13 @@
 package com.inventory.inventory_servic.dto.response;
 
-import com.inventory.inventory_servic.model.Category;
-import com.inventory.inventory_servic.model.ProductType;
-import com.inventory.inventory_servic.model.Unit;
+import java.time.LocalDateTime;
 
-import java.math.BigDecimal;
-
-public record ResponseProductDTO(long id, String name, String brand, Unit unit, BigDecimal netContent, BigDecimal price, Category category, ProductType type) {
-}
+public record ResponseProductDTO(
+        Long id,
+        String name,
+        String description,
+        ResponseCategoryDTO parentCategory,
+        Boolean active,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
+){}

@@ -1,19 +1,26 @@
 package com.inventory.inventory_servic.component;
 
+import com.inventory.inventory_servic.domain.Product;
 import com.inventory.inventory_servic.dto.request.RequestProductDTO;
+import com.inventory.inventory_servic.dto.request.RequestUpdateProductDTO;
 import com.inventory.inventory_servic.dto.response.ResponseProductDTO;
-import com.inventory.inventory_servic.model.Product;
+import com.inventory.inventory_servic.dto.response.ResponseStockDTO;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.ReportingPolicy;
 
-@Mapper (
+import java.util.List;
+
+
+@Mapper(
         componentModel = "spring",
-        unmappedTargetPolicy = ReportingPolicy.IGNORE)
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR
+       )
 public interface ProductMapper {
 
-    @Mapping(target = "category", ignore = true)
-    Product dtoToProduct(RequestProductDTO requestProductDTO);
+       Product toProduc(RequestProductDTO requestProductDTO);
+       Product toUpdateProduct(RequestUpdateProductDTO requestUpdateProductDTO);
+       ResponseProductDTO toResponseProduct(Product product);
+       List<ResponseProductDTO> toProductDTOLIst(List<Product> products);
+       List<ResponseStockDTO> toStockDTOList(List<Product> products);
 
-    ResponseProductDTO toResponseProducDto(Product product);
 }

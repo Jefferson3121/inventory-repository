@@ -1,71 +1,77 @@
 package com.inventory.inventory_servic.service;
 
 import com.inventory.inventory_servic.component.CategoryMapper;
+import com.inventory.inventory_servic.domain.Category;
 import com.inventory.inventory_servic.dto.request.RequestCategoryDTO;
-import com.inventory.inventory_servic.dto.request.RequestUpdateDescriptionDTO;
 import com.inventory.inventory_servic.dto.response.ResponseCategoryDTO;
-import com.inventory.inventory_servic.model.Category;
-import com.inventory.inventory_servic.model.Product;
 import com.inventory.inventory_servic.repository.CategoryRepository;
-import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.Comparator;
+import java.util.List;
+
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-    private final CategoryMapper categoryMapper;
+
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
 
     @Transactional
     @Override
-    public ResponseCategoryDTO addCategory(RequestCategoryDTO categoryDTO){
+    public ResponseCategoryDTO createCategory(RequestCategoryDTO requestCategory){
 
-        Category category = categoryMapper.toCategory(categoryDTO);
-        category.setActive(true);
+        Category category = categoryRepository.save(categoryMapper.toCategory(requestCategory));
 
-        if (categoryDTO.idCategoryParent() != null){ 
-            Category categoryParent = categoryRepository.findById(categoryDTO.idCategoryParent())
-                            .orElseThrow(() -> new RuntimeException("Objeto no econtrado")); // mejorar exepcion y mensaje
-            category.setCategory(categoryParent);
+
+        return categoryMapper.toResponseCategoryDTO(category);
+    }
+
+    @Override
+    public ResponseCategoryDTO updateCategory(long id, RequestCategoryDTO requestCategoryDTO){
+
+        if (!categoryRepository.existsById(id)){
+            throw new EntityNotFoundException("La categoria que intenta actualizar no existe");
         }
 
-        Category categoryResponse = categoryRepository.save(category);
+        Category category = categoryRepository.save(categoryMapper.toCategory(requestCategoryDTO));
 
-        return categoryMapper.toResponseCategoryDTO(categoryResponse);
+         return categoryMapper.toResponseCategoryDTO(category);
     }
+
 
     @Override
-    public void updateDescription(Long id, RequestUpdateDescriptionDTO newDescription){
+    public ResponseCategoryDTO getCategory(long idCategory){
 
 
+        Category category = categoryRepository.findById(idCategory)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Categoria con id = %d no existe", idCategory
+                )));
+
+        return categoryMapper.toResponseCategoryDTO(category);
 
     }
 
-    @Transactional()
-    @Override
-    public void activateCategory(Integer id){
-
-        validateId(id);
-
-        Category category = categoryRepository.getById(id);
-        category.setActive(!category.isActive());
-    }
 
     @Override
-    public void deleteCategory(Long id){
+    public void deleteCategory(@PathVariable long idCategory){
 
-        Comparator<Product>
-
+        categoryRepository.deleteById(idCategory);
     }
 
-    private void validateId(Integer id){
-        if (id == null) throw new IllegalArgumentException("No se ingreso el id");//mejorar mensaje y hacer excepcion perzonalizada
 
-        if (id < 1) throw new IllegalArgumentException("Id invalido"); // mejorar mensaje y validacion tamebine exepcion
+
+    @Override
+    public List<ResponseCategoryDTO> getAllCategorys(){
+
+        List<Category> categoryList = categoryRepository.findAll();
+
+        return categoryMapper.toListResponseCategoryDTO(categoryList);
     }
 }

@@ -1,7 +1,12 @@
 package com.inventory.inventory_servic.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
-public record RequestCategoryDTO(@NotBlank String name,@NotBlank String description,@NotNull Integer idCategoryParent) {
+public record RequestCategoryDTO(
+
+        @NotBlank
+        String name,
+        String description,
+        long idParentCategory,
+        boolean active) {
 }
