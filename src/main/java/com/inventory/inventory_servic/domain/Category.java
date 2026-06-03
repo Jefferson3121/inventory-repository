@@ -2,14 +2,17 @@ package com.inventory.inventory_servic.domain;
 
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
-
+@Slf4j
 @Entity
-@NoArgsConstructor
+@Setter
+//@NoArgsConstructor
 public class Category {
 
 
@@ -32,19 +35,41 @@ public class Category {
 
 
 
+
+
     public static Category createCategory(String name, String description, Category parentCategory){
 
         if(name == null ) throw  new IllegalArgumentException("El nombre de la categoria debe ser valido");
 
+        log.info("___________________Metodos static");
+
         return new Category(name, description, parentCategory);
     }
 
-    private Category(String name, String description, Category parentCategory){
+
+    public Category(){
+
+        this.active = false;
+        this.createdAt = LocalDateTime.now();
+        log.info("______________________Constructor vacio");
+
+    }
+
+
+
+
+
+    public Category(String name, String description, Category parentCategory){
+
+        this();
+        log.info("Metodo con parametros");
+
+
         this.name = name;
         this.description = description;
         this.parentCategory = parentCategory;
-        this.active = false;
-        this.createdAt = LocalDateTime.now();
+
+
 
     }
 

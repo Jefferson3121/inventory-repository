@@ -7,6 +7,6 @@ public record RequestCategoryDTO(
         @NotBlank
         String name,
         String description,
-        long idParentCategory,
-        boolean active) {
+        long idParentCategory)
+{
 }

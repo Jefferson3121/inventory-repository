@@ -1,11 +1,9 @@
 package com.inventory.inventory_servic.controller;
 
-import com.inventory.inventory_servic.component.ProductMapper;
-import com.inventory.inventory_servic.domain.Product;
 import com.inventory.inventory_servic.dto.request.RequestProductDTO;
 import com.inventory.inventory_servic.dto.request.RequestUpdateProductDTO;
 import com.inventory.inventory_servic.dto.response.ResponseProductDTO;
-import com.inventory.inventory_servic.dto.response.ResponseStockDTO;
+import com.inventory.inventory_servic.dto.response.ResponseProductStockDTO;
 import com.inventory.inventory_servic.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,58 +19,36 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    private final ProductMapper productMapper;
-
 
     @PostMapping()
-    public ResponseEntity<ResponseProductDTO> createProduct(@RequestBody RequestProductDTO requestProductDTO){
-
-       Product product = productService.createProduct(productMapper.toProduc(requestProductDTO));
-
-       return ResponseEntity.status(HttpStatus.CREATED).body(productMapper.toResponseProduct(product));
-
+    public ResponseEntity<ResponseProductDTO> createProduct(@RequestBody RequestProductDTO requestProductDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(requestProductDTO));
     }
-
 
     @PatchMapping
-    public ResponseEntity<ResponseProductDTO> updateProduct(@RequestBody RequestUpdateProductDTO updateProductDTO){
-
-        Product product = productService.updateProduct(productMapper.toUpdateProduct(updateProductDTO));
-
-        return ResponseEntity.status(HttpStatus.OK).body(productMapper.toResponseProduct(product));
+    public ResponseEntity<ResponseProductDTO> updateProduct(@RequestBody RequestUpdateProductDTO updateProductDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.updateProduct(updateProductDTO));
     }
 
-    @DeleteMapping("/id")
-    public ResponseEntity<Void> deleteProduct(@PathVariable long idProduct){
-        productService.deleteProduct(idProduct);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
+        productService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-
-
-
-    @GetMapping("/id")
-    public ResponseEntity<ResponseProductDTO> getByIdProduct(@PathVariable long idProduct){
-
-        Product product = productService.getByIdProduct(idProduct);
-        return ResponseEntity.status(HttpStatus.OK).body(productMapper.toResponseProduct(product));
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseProductDTO> getByIdProduct(@PathVariable long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getByIdProduct(id));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ResponseProductDTO>> getAllProducts(){
-
-        List<Product> products = productService.getAllProducts();
-
-        return ResponseEntity.status(HttpStatus.OK).body(productMapper.toProductDTOLIst(products));
+    public ResponseEntity<List<ResponseProductDTO>> getAllProducts() {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getAllProducts());
     }
 
-
     @GetMapping("/stock")
-    public ResponseEntity<List<ResponseStockDTO>> getAllStock(){
-
-        List<Product> products = productService.getAllProducts();
-
-        return ResponseEntity.status(HttpStatus.OK).body(productMapper.toStockDTOList(products));
+    public ResponseEntity<List<ResponseProductStockDTO>> getAllStock() {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getAllStock());
     }
 
 

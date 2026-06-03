@@ -1,8 +1,12 @@
 package com.inventory.inventory_servic.service;
 
+import com.inventory.inventory_servic.component.ProductMapper;
+import com.inventory.inventory_servic.domain.Product;
 import com.inventory.inventory_servic.dto.request.RequestProductDTO;
 import com.inventory.inventory_servic.dto.request.RequestUpdateProductDTO;
 import com.inventory.inventory_servic.dto.response.ResponseProductDTO;
+import com.inventory.inventory_servic.dto.response.ResponseProductStockDTO;
+import com.inventory.inventory_servic.repository.CategoryRepository;
 import com.inventory.inventory_servic.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -17,35 +21,50 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService{
 
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
+
+    private final ProductMapper productMapper;
 
     @Transactional
     @Override
-    public ResponseProductDTO createProduct(RequestProductDTO requestProductDTO){
+    public ResponseProductDTO createProduct(RequestProductDTO requestProductDTO) {
 
-       return productRepository.save(requestProductDTO);
+        Product product = productRepository.save(productMapper.toProduc(requestProductDTO));
+        return productMapper.toResponseProduct(product);
     }
 
     @Override
-    public ResponseProductDTO updateProduct(RequestUpdateProductDTO requestUpdateProductDTO){
-
-        return productRepository.save(requestUpdateProductDTO);
+    public ResponseProductDTO updateProduct(RequestUpdateProductDTO requestUpdateProductDTO) {
+        Product product = productRepository.save(productMapper.toUpdateProduct(requestUpdateProductDTO));
+        return productMapper.toResponseProduct(product);
     }
 
-    public void deleteProduct(long idProduct){
-
+    @Override
+    public void deleteProduct(long idProduct) {
         productRepository.deleteById(idProduct);
     }
 
     @Override
-    public ResponseProductDTO getByIdProduct(long idProduct){
-
-        return productRepository.findById(idProduct)
-                .orElseThrow( () -> new EntityNotFoundException("Product con id "));
+    public ResponseProductDTO getByIdProduct(long idProduct) {
+        Product product = productRepository.findById(idProduct)
+                .orElseThrow(() -> new EntityNotFoundException("Product con id "));
+        return productMapper.toResponseProduct(product);
     }
 
     @Override
-    public List<ResponseProductDTO> getAllProducts(){
+    public List<ResponseProductDTO> getAllProducts() {
+        return productRepository.findAll()
+                .stream()
+                .map(productMapper::toResponseProduct)
+                .toList();
+    }
 
-        return productRepository.findAll();
+
+
+    @Override
+    public List<ResponseProductStockDTO> getAllStock(){
+        return productRepository.findAll().stream()
+                .map(productMapper::toProductStockResponseDTO)
+                .toList();
     }
 }
