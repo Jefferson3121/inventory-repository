@@ -8,13 +8,14 @@ import java.math.BigDecimal;
 public record RequestProductDTO(
         @NotBlank
         String name,
-        String description,
-        @NotBlank
-        String brand,
         @NotNull
-        BigDecimal price,
+        RequestNetContentDTO netContent,
         @NotNull
         Long categoryId,
         @NotNull
-        RequestNetContentDTO measurement
+        BigDecimal price,
+        String description,
+        @NotBlank
+        String brand
+
 ) {}
