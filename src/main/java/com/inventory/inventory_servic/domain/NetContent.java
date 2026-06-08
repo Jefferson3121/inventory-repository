@@ -3,8 +3,10 @@ package com.inventory.inventory_servic.domain;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+
 
 @Embeddable
 public class NetContent {
@@ -13,4 +15,12 @@ public class NetContent {
 
     @Enumerated(EnumType.STRING)
     private UnitMeasurement unit;
+
+    public NetContent(){}
+
+
+    public NetContent(BigDecimal value, UnitMeasurement unit){
+        this.value = value;
+        this.unit = unit;
+    }
 }
