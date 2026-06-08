@@ -1,6 +1,7 @@
 package com.inventory.inventory_servic.service;
 
 import com.inventory.inventory_servic.component.ProductMapper;
+import com.inventory.inventory_servic.domain.Category;
 import com.inventory.inventory_servic.domain.Product;
 import com.inventory.inventory_servic.dto.request.RequestProductDTO;
 import com.inventory.inventory_servic.dto.request.RequestUpdateProductDTO;
@@ -10,12 +11,13 @@ import com.inventory.inventory_servic.repository.CategoryRepository;
 import com.inventory.inventory_servic.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService{
@@ -29,8 +31,12 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ResponseProductDTO createProduct(RequestProductDTO requestProductDTO) {
 
-        Product product = productRepository.save(productMapper.toProduc(requestProductDTO));
-        return productMapper.toResponseProduct(product);
+        Category category = categoryRepository.findById(requestProductDTO.categoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Categoría con id " + requestProductDTO.categoryId() + " no existe"));
+
+        Product product = productMapper.toProduct(requestProductDTO, category);
+
+        return productMapper.toResponseProduct(productRepository.save(product));
     }
 
     @Override
