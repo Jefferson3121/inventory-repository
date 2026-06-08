@@ -6,13 +6,14 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
 @Slf4j
 @Entity
 @Setter
-//@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Category {
 
 
@@ -40,19 +41,13 @@ public class Category {
     public static Category createCategory(String name, String description, Category parentCategory){
 
         if(name == null ) throw  new IllegalArgumentException("El nombre de la categoria debe ser valido");
-
-        log.info("___________________Metodos static");
-
         return new Category(name, description, parentCategory);
     }
 
 
     public Category(){
-
         this.active = false;
         this.createdAt = LocalDateTime.now();
-        log.info("______________________Constructor vacio");
-
     }
 
 
