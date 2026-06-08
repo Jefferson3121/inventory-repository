@@ -20,7 +20,7 @@ import java.util.List;
 )
 public interface CategoryMapper {
 
-//    @Mapping(target = "parentCategory", ignore = true)
+//    @Mapping(target = "categoryId", ignore = true)
     Category toCategory(RequestCategoryDTO requestCategoryDTO);
 
 
