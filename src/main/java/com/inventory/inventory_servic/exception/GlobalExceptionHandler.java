@@ -1,8 +1,12 @@
 package com.inventory.inventory_servic.exception;
 
 
+
+
+
 import com.inventory.inventory_servic.dto.response.ErrorResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +20,9 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Order(2)
 public class GlobalExceptionHandler {
+
 
 
         @ExceptionHandler(EntityNotFoundException.class)
@@ -47,12 +53,12 @@ public class GlobalExceptionHandler {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDTO(message));
         }
 
-        
+
 
         @ExceptionHandler(HttpMessageNotReadableException.class)
         public ResponseEntity<ErrorResponseDTO> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDTO("El cuerpo de la petición es inválido o está malformado"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDTO(ex.getMessage()));
         }
 
 
@@ -60,7 +66,7 @@ public class GlobalExceptionHandler {
 
         @ExceptionHandler(MethodArgumentTypeMismatchException.class)
         public ResponseEntity<ErrorResponseDTO> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
-            String message = String.format("El parámetro '%s' recibió un valor inválido: '%s'", ex.getName(), ex.getValue());
+            String message = String.format("El parámetro ' recibió un valor inválido: '%s'", ex.getName());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDTO(message));
         }
 
@@ -71,13 +77,6 @@ public class GlobalExceptionHandler {
         public ResponseEntity<ErrorResponseDTO> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
             String message = String.format("El parámetro '%s' es requerido", ex.getParameterName());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDTO(message));
-        }
-
-
-
-        @ExceptionHandler(DataIntegrityViolationException.class)
-        public ResponseEntity<ErrorResponseDTO> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponseDTO(ex.getCause().getMessage()));
         }
 
 
