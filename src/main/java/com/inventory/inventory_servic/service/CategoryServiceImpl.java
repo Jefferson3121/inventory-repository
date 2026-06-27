@@ -7,42 +7,68 @@ import com.inventory.inventory_servic.dto.request.RequestUpdateCategoryDTO;
 import com.inventory.inventory_servic.dto.response.ResponseCategoryDTO;
 import com.inventory.inventory_servic.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
 
     private final CategoryRepository categoryRepository;
-    private final CategoryMapper categoryMapper;
+    private final CategoryMapper    categoryMapper;
 
 
 
     @Transactional
     @Override
-    public ResponseCategoryDTO createCategory(RequestCategoryDTO requestCategory) {
+    public ResponseCategoryDTO createCategory( RequestCategoryDTO requestCategory) {
 
+        log.info(String.format("antes del save %s", requestCategory.name()));
 
             Category category = categoryRepository.save(categoryMapper.toCategory(requestCategory));
+
+            log.info("Despues del save \n  %s  \n  %s ", requestCategory.name(), requestCategory.description());
 
         return categoryMapper.toResponseCategoryDTO(category);
     }
 
 
 
+    @Transactional
     @Override
     public ResponseCategoryDTO updateCategory(long id, RequestUpdateCategoryDTO requestUpdateCategoryDTO) {
 
-        if (!categoryRepository.existsById(id)) {
-            throw new EntityNotFoundException("La categoria que intenta actualizar no existe");
+
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() ->  new EntityNotFoundException("La categoria que intenta actualizar no existe"));
+
+        if (requestUpdateCategoryDTO.name() != null) category.updateName(requestUpdateCategoryDTO.name());
+
+        if(requestUpdateCategoryDTO.description() != null) category.updateDescription(requestUpdateCategoryDTO.description());
+
+        if(requestUpdateCategoryDTO.parentCategoryId() > 0 && categoryRepository.existsById(requestUpdateCategoryDTO.parentCategoryId())){
+
+            Category parentCategory = categoryRepository.findById(requestUpdateCategoryDTO.parentCategoryId())
+                    .orElseThrow(() -> new IllegalArgumentException(String.format("ParentCategory de Id: %d no existe", requestUpdateCategoryDTO.parentCategoryId())));
         }
-        Category category = categoryRepository.save(categoryMapper.toCategoryToUpdate(requestUpdateCategoryDTO));
+
+
+        if (requestUpdateCategoryDTO.active() != category.isActive()){
+
+            if (category.isActive() == true) {
+                category.desactivate();
+            } else {
+                category.activate();
+            }
+        }
+
+
         return categoryMapper.toResponseCategoryDTO(category);
     }
 
