@@ -1,4 +1,16 @@
 package com.inventory.inventory_servic.dto.response;
 
-public record ResponseCategoryDTO() {
+import java.time.LocalDateTime;
+
+public record ResponseCategoryDTO(
+        long id,
+        String name,
+        String description,
+        long parentCategoryId,
+        boolean isActive,
+        LocalDateTime createdAt,
+        LocalDateTime updateAt
+
+
+) {
 }
