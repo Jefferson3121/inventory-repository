@@ -11,8 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+
 @Entity
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
@@ -40,10 +39,12 @@ public class Product {
     @Column(name = "update_at")
     @LastModifiedDate
     private LocalDateTime updatedAt;
+//
+//    protected Product(){}
 
 
 
-    public static Product createPorduct(String sku, String name, NetContent netContent, Category category, BigDecimal price, String description, String brand){
+    public static Product createProduct(String sku, String name, NetContent netContent, Category category, BigDecimal price, String description, String brand){
 
 
         if (sku == null ||
@@ -55,7 +56,7 @@ public class Product {
             throw new IllegalArgumentException("No se permiten campos vacios \n Uno o mascampos estan vacios");
 
 
-        if (price.equals(BigDecimal.ZERO))
+        if ( price.compareTo(BigDecimal.ZERO) < 0 )
             throw new IllegalArgumentException("El precio de un producto no pude ser menor a cero (0)");
 
         return new Product(sku, name, netContent, category, price, description, brand);
@@ -79,9 +80,9 @@ public class Product {
 
     public void updateName(String newName){
 
-        if(name == null)throw new IllegalArgumentException("El nuevo nombre debe ser un valor valido");
+        if(newName == null)throw new IllegalArgumentException("El nuevo nombre debe ser un valor valido");
 
-        this.name = name;
+        this.name = newName;
     }
 
     public void updateCategory(Category category){
@@ -91,7 +92,7 @@ public class Product {
     }
 
     public void updatePrice(BigDecimal price){
-        if(price.equals(BigDecimal.ZERO))throw new IllegalArgumentException("El precio debe ser un valor valido mayor o igual a cero (0)");
+        if(price.compareTo(BigDecimal.ZERO) < 0)throw new IllegalArgumentException("El precio debe ser un valor valido mayor o igual a cero (0)");
 
         this.price = price;
     }
@@ -133,6 +134,15 @@ public class Product {
         if (quantity <= 0) throw new IllegalArgumentException("Cantidad a reducir es invalidad, la cantidad debe ser mayor a cero ('0')");
 
         this.stock = new Stock(this.stock.getQuantity() - quantity, this.stock.getMinQuantity());
+    }
+
+
+    public void updateNetContent(NetContent netContent){
+
+        if(netContent == null) throw new IllegalArgumentException("");
+
+
+        this.netContent = new NetContent(netContent.getValue(), netContent.getUnit());
     }
 
 
