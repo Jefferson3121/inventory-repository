@@ -1,7 +1,7 @@
 package com.inventory.inventory_servic.domain;
 
 import jakarta.persistence.*;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.CreatedDate;
@@ -10,9 +10,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-@Slf4j
+@Getter
 @Entity
-@Setter
 @EntityListeners(AuditingEntityListener.class)
 public class Category {
 
@@ -24,7 +23,7 @@ public class Category {
 
     @JoinColumn(name = "parent_category_id") @ManyToOne
     private Category parentCategory;
-    private boolean active;
+    private boolean isActive;
 
     @Column(name = "created_at")
     @CreatedDate
@@ -41,13 +40,13 @@ public class Category {
     public static Category createCategory(String name, String description, Category parentCategory){
 
         if(name == null ) throw  new IllegalArgumentException("El nombre de la categoria debe ser valido");
+
         return new Category(name, description, parentCategory);
     }
 
 
-    public Category(){
-        this.active = false;
-        this.createdAt = LocalDateTime.now();
+    protected Category(){
+        this.isActive = false;
     }
 
 
@@ -55,18 +54,14 @@ public class Category {
 
 
     public Category(String name, String description, Category parentCategory){
-
         this();
-        log.info("Metodo con parametros");
-
 
         this.name = name;
         this.description = description;
         this.parentCategory = parentCategory;
-
-
-
     }
+
+
 
     public void updateName(String name){
 
@@ -91,11 +86,11 @@ public class Category {
     }
 
     public void activate(){
-        this.active = true;
+        this.isActive = true;
     }
 
     public void desactivate() {
-        this.active = false;
+        this.isActive = false;
     }
 
 
