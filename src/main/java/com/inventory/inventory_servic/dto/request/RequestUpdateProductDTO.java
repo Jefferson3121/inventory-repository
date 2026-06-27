@@ -7,7 +7,8 @@ import java.math.BigDecimal;
 public record RequestUpdateProductDTO(
         String name,
         String description,
-        Category category,
+        long categoryId,
         String brand,
-        BigDecimal price) {
+        BigDecimal price,
+        RequestNetContentDTO netContent) {
 }
