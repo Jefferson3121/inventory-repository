@@ -1,9 +1,8 @@
 package com.inventory.inventory_servic.dto.request;
 
-import com.inventory.inventory_servic.domain.Category;
-
 public record RequestUpdateCategoryDTO(
+        String name,
         String description,
-        Category parentCategory,
+        long parentCategoryId,
         boolean active) {
 }
