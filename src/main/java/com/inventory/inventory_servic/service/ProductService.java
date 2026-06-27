@@ -14,7 +14,7 @@ public interface ProductService {
 
     public ResponseProductDTO createProduct(RequestProductDTO requestProductDTO);
 
-    public ResponseProductDTO updateProduct(RequestUpdateProductDTO requestUpdateProductDTO);
+    public ResponseProductDTO updateProduct(long id, RequestUpdateProductDTO requestUpdateProductDTO);
 
     public void deleteProduct(long idProduct);
 
