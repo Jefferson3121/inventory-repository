@@ -5,6 +5,7 @@ import com.inventory.inventory_servic.dto.request.RequestUpdateProductDTO;
 import com.inventory.inventory_servic.dto.response.ResponseProductDTO;
 import com.inventory.inventory_servic.dto.response.ResponseProductStockDTO;
 import com.inventory.inventory_servic.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +22,13 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping()
-    public ResponseEntity<ResponseProductDTO> createProduct(@RequestBody RequestProductDTO requestProductDTO) {
+    public ResponseEntity<ResponseProductDTO> createProduct(@RequestBody @Valid RequestProductDTO requestProductDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(requestProductDTO));
     }
 
-    @PatchMapping
-    public ResponseEntity<ResponseProductDTO> updateProduct(@RequestBody RequestUpdateProductDTO updateProductDTO) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.updateProduct(updateProductDTO));
+    @PatchMapping("/{id}")
+    public ResponseEntity<ResponseProductDTO> updateProduct(@PathVariable long id,  @RequestBody RequestUpdateProductDTO updateProductDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.updateProduct(id,   updateProductDTO));
     }
 
     @DeleteMapping("/{id}")
