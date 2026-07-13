@@ -10,16 +10,19 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
 @NoArgsConstructor
+@Getter
 @EntityListeners(AuditingEntityListener.class)
 public class Product {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String sku;
+//    private String sku;
     private String name;
 
     @Embedded
@@ -44,36 +47,41 @@ public class Product {
 
 
 
-    public static Product createProduct(String sku, String name, NetContent netContent, Category category, BigDecimal price, String description, String brand){
+    public static Product createProduct(/*String sku,**/ String name, NetContent netContent, Category category, BigDecimal price, String description, String brand, Stock stock){
 
+        List<String> camposVacios = new ArrayList<>();
 
-        if (sku == null ||
-                name == null ||
-                netContent == null ||
-                category == null ||
-                price == null ||
-                brand == null)
-            throw new IllegalArgumentException("No se permiten campos vacios \n Uno o mascampos estan vacios");
+//        if (sku == null)        camposVacios.add("sku");
+        if (name == null)       camposVacios.add("name");
+        if (netContent == null) camposVacios.add("netContent");
+        if (category == null)   camposVacios.add("category");
+        if (price == null)      camposVacios.add("price");
+        if (brand == null)      camposVacios.add("brand");
+        if (stock == null)      camposVacios.add("stock");
 
-
+        if (!camposVacios.isEmpty())
+            throw new IllegalArgumentException("Error al crear un nuevo producto: Los siguientes campos son obligatorios: " + String.join(", ", camposVacios));
         if ( price.compareTo(BigDecimal.ZERO) < 0 )
             throw new IllegalArgumentException("El precio de un producto no pude ser menor a cero (0)");
 
-        return new Product(sku, name, netContent, category, price, description, brand);
+        String normalizedName = Product.normalize(name);
+        String normalizedBrand = Product.normalize(brand);
+
+        return new Product(/*sku**/ normalizedName, netContent, category, price, description, normalizedBrand, stock);
 
     }
 
-    private Product(String sku, String name, NetContent netContent, Category category, BigDecimal price, String description, String brand){
+    private Product(/*String sku,**/ String name, NetContent netContent, Category category, BigDecimal price, String description, String brand, Stock stock){
 
 
-        this.sku = sku;
+//        this.sku = sku;
         this.name = name;
         this.netContent = netContent;
         this.category = category;
         this.price = price;
         this.description = description;
         this.brand = brand;
-        this.stock = new Stock(0, 0);
+        this.stock = stock;
 
     }
 
@@ -140,9 +148,12 @@ public class Product {
     public void updateNetContent(NetContent netContent){
 
         if(netContent == null) throw new IllegalArgumentException("");
-
-
         this.netContent = new NetContent(netContent.getValue(), netContent.getUnit());
+    }
+
+
+    public static String normalize(String value) {
+        return value.trim().toLowerCase().replaceAll("\\s+", " ");
     }
 
 
