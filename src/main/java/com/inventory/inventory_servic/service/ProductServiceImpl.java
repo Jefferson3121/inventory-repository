@@ -31,11 +31,21 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ResponseProductDTO createProduct(RequestProductDTO requestProductDTO) {
 
+        String normalizedName = Product.normalize(requestProductDTO.name());
+        String normalizedBrand = Product.normalize(requestProductDTO.brand());
+
+        if (productRepository.existsByNameAndBrandAndNetContent_ValueAndNetContent_Unit(
+                normalizedName, normalizedBrand,
+                requestProductDTO.netContent().value(), requestProductDTO.netContent().unit())) {
+            throw new IllegalArgumentException("Ya existe un producto con ese nombre, marca y contenido neto");
+        }
+
+
+
         Category category = categoryRepository.findById(requestProductDTO.categoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Categoría con id " + requestProductDTO.categoryId() + " no existe"));
 
-        Product product = productMapper.toProduct(requestProductDTO);
-        product.updateCategory(category);
+        Product product = productMapper.toProduct(requestProductDTO, category);
 
         return productMapper.toResponseProduct(productRepository.save(product));
     }
@@ -66,7 +76,8 @@ public class ProductServiceImpl implements ProductService{
             Category category = categoryRepository.findById(requestUpdateProductDTO.categoryId())
                     .orElseThrow(() -> new EntityNotFoundException("Categoria no existe"));
             product.updateCategory(category);
-    }
+        }
+
 
         return productMapper.toResponseProduct(productRepository.save(product));
 
