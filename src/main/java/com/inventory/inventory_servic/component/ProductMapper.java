@@ -7,14 +7,13 @@ import com.inventory.inventory_servic.domain.Stock;
 import com.inventory.inventory_servic.dto.request.RequestNetContentDTO;
 import com.inventory.inventory_servic.dto.request.RequestProductDTO;
 import com.inventory.inventory_servic.dto.request.RequestStockDTO;
-import com.inventory.inventory_servic.dto.request.RequestUpdateProductDTO;
 import com.inventory.inventory_servic.dto.response.ResponseNetContentDTO;
 import com.inventory.inventory_servic.dto.response.ResponseProductDTO;
 import com.inventory.inventory_servic.dto.response.ResponseProductStockDTO;
 import com.inventory.inventory_servic.dto.response.ResponseStockDTO;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
-
+import org.mapstruct.Mapping;
 
 
 @Mapper(
@@ -23,9 +22,7 @@ import org.mapstruct.Mapper;
        )
 public interface ProductMapper {
 
-//       Product toProduct(RequestProductDTO requestProductDTO);
-       Product toUpdateProduct(RequestUpdateProductDTO requestUpdateProductDTO);
-       ResponseProductDTO toResponseProduct(Product product);
+//       Product toUpdateProduct(RequestUpdateProductDTO requestUpdateProductDTO);
        ResponseProductStockDTO toProductStockResponseDTO(Product product);
        ResponseNetContentDTO toResponseNetContentDTO(NetContent netContent);
        ResponseStockDTO toResponseStockDTO(Stock stock);
@@ -45,18 +42,37 @@ public interface ProductMapper {
        }
 
 
-       default Product toProduct(RequestProductDTO requestProductDTO){
+       default Product toProduct(RequestProductDTO requestProductDTO, Category category){
 
               return  Product.createProduct(
-                      null,
                       requestProductDTO.name(),
-                      ,
-                      null,
+                      toNetContent(requestProductDTO.netContent()),
+                      category,
                       requestProductDTO.price(),
                       requestProductDTO.description(),
-                      requestProductDTO.brand()
-              )
+                      requestProductDTO.brand(),
+                      toStock(requestProductDTO.stock())
+              );
 
+       }
+
+
+
+
+       default ResponseProductDTO toResponseProduct(Product product){
+
+              return new ResponseProductDTO(
+                      product.getId(),
+                      product.getName(),
+                      toResponseNetContentDTO(product.getNetContent()),
+                      product.getCategory().getName(),
+                      product.getPrice(),
+                      product.getDescription(),
+                      product.getBrand(),
+                      toResponseStockDTO(product.getStock()),
+                      product.getCreatedAt(),
+                      product.getUpdatedAt()
+              );
        }
 
 }
