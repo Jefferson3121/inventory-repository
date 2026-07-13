@@ -6,8 +6,8 @@ public record ResponseCategoryDTO(
         long id,
         String name,
         String description,
-        long parentCategoryId,
-        boolean isActive,
+        Long parentCategoryId,
+        boolean active,
         LocalDateTime createdAt,
         LocalDateTime updateAt
 
