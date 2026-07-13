@@ -34,22 +34,57 @@ public class ProductServiceImpl implements ProductService{
         Category category = categoryRepository.findById(requestProductDTO.categoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Categoría con id " + requestProductDTO.categoryId() + " no existe"));
 
-        Product product = productMapper.toProduct(requestProductDTO, category);
+        Product product = productMapper.toProduct(requestProductDTO);
+        product.updateCategory(category);
 
         return productMapper.toResponseProduct(productRepository.save(product));
     }
 
+
+
+
+    @Transactional
     @Override
-    public ResponseProductDTO updateProduct(RequestUpdateProductDTO requestUpdateProductDTO) {
-        Product product = productRepository.save(productMapper.toUpdateProduct(requestUpdateProductDTO));
-        return productMapper.toResponseProduct(product);
+    public ResponseProductDTO updateProduct(long id, RequestUpdateProductDTO requestUpdateProductDTO) {
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Producto con id " + id + " no existe"));
+
+        if (requestUpdateProductDTO.name() != null)
+            product.updateName(requestUpdateProductDTO.name());
+
+        if (requestUpdateProductDTO.description() != null)
+            product.updateDescription(requestUpdateProductDTO.description());
+
+        if (requestUpdateProductDTO.price() != null)
+            product.updatePrice(requestUpdateProductDTO.price());
+
+        if (requestUpdateProductDTO.netContent() != null)
+            product.updateNetContent(productMapper.toNetContent(requestUpdateProductDTO.netContent()));
+
+        if (requestUpdateProductDTO.categoryId() > 0) {
+            Category category = categoryRepository.findById(requestUpdateProductDTO.categoryId())
+                    .orElseThrow(() -> new EntityNotFoundException("Categoria no existe"));
+            product.updateCategory(category);
     }
 
+        return productMapper.toResponseProduct(productRepository.save(product));
+
+    }
+
+
+
+
+    @Transactional
     @Override
     public void deleteProduct(long idProduct) {
         productRepository.deleteById(idProduct);
     }
 
+
+
+
+    @Transactional(readOnly = true)
     @Override
     public ResponseProductDTO getByIdProduct(long idProduct) {
         Product product = productRepository.findById(idProduct)
@@ -57,6 +92,10 @@ public class ProductServiceImpl implements ProductService{
         return productMapper.toResponseProduct(product);
     }
 
+
+
+
+    @Transactional(readOnly = true)
     @Override
     public List<ResponseProductDTO> getAllProducts() {
         return productRepository.findAll()
@@ -67,6 +106,9 @@ public class ProductServiceImpl implements ProductService{
 
 
 
+
+
+    @Transactional(readOnly = true)
     @Override
     public List<ResponseProductStockDTO> getAllStock(){
         return productRepository.findAll().stream()

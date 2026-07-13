@@ -23,13 +23,14 @@ import org.mapstruct.Mapper;
        )
 public interface ProductMapper {
 
-       Product toProduct(RequestProductDTO requestProductDTO, Category category);
+//       Product toProduct(RequestProductDTO requestProductDTO);
        Product toUpdateProduct(RequestUpdateProductDTO requestUpdateProductDTO);
        ResponseProductDTO toResponseProduct(Product product);
        ResponseProductStockDTO toProductStockResponseDTO(Product product);
        ResponseNetContentDTO toResponseNetContentDTO(NetContent netContent);
        ResponseStockDTO toResponseStockDTO(Stock stock);
        Stock toStock(RequestStockDTO requestStockDTO);
+       NetContent toNetContent(RequestNetContentDTO requestNetContentDTO);
 
 
 
@@ -41,6 +42,21 @@ public interface ProductMapper {
                       netContentDTO.value(),
                       netContentDTO.unit()
               );
+       }
+
+
+       default Product toProduct(RequestProductDTO requestProductDTO){
+
+              return  Product.createProduct(
+                      null,
+                      requestProductDTO.name(),
+                      ,
+                      null,
+                      requestProductDTO.price(),
+                      requestProductDTO.description(),
+                      requestProductDTO.brand()
+              )
+
        }
 
 }
