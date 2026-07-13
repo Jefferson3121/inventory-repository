@@ -5,9 +5,9 @@ import com.inventory.inventory_servic.domain.Category;
 import com.inventory.inventory_servic.dto.request.RequestCategoryDTO;
 import com.inventory.inventory_servic.dto.request.RequestUpdateCategoryDTO;
 import com.inventory.inventory_servic.dto.response.ResponseCategoryDTO;
+import com.inventory.inventory_servic.exception.DuplicateResourceException;
 import com.inventory.inventory_servic.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,18 +24,22 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryMapper    categoryMapper;
 
 
-
     @Transactional
     @Override
-    public ResponseCategoryDTO createCategory( RequestCategoryDTO requestCategory) {
+    public ResponseCategoryDTO createCategory(RequestCategoryDTO requestCategory) {
 
-        log.info(String.format("antes del save %s", requestCategory.name()));
+        if (categoryRepository.existsByName(requestCategory.name()))
+            throw new DuplicateResourceException("Ya existe una categoria con el nombre: " + requestCategory.name());
 
-            Category category = categoryRepository.save(categoryMapper.toCategory(requestCategory));
 
-            log.info("Despues del save \n  %s  \n  %s ", requestCategory.name(), requestCategory.description());
 
-        return categoryMapper.toResponseCategoryDTO(category);
+        Category category = categoryMapper.toCategory(requestCategory);
+
+        if (requestCategory.idParentCategory() != 0)
+            category.updateParentCategory(categoryRepository.findById(requestCategory.idParentCategory())
+                    .orElseThrow(() -> new IllegalArgumentException("Id de categoria padre no existe")));
+
+        return categoryMapper.toResponseCategoryDTO(categoryRepository.save(category));
     }
 
 
@@ -56,18 +60,22 @@ public class CategoryServiceImpl implements CategoryService {
 
             Category parentCategory = categoryRepository.findById(requestUpdateCategoryDTO.parentCategoryId())
                     .orElseThrow(() -> new IllegalArgumentException(String.format("ParentCategory de Id: %d no existe", requestUpdateCategoryDTO.parentCategoryId())));
+
+            category.updateParentCategory(parentCategory);
         }
 
+        if ((requestUpdateCategoryDTO.active() != null)) {
 
-        if (requestUpdateCategoryDTO.active() != category.isActive()){
+            if (requestUpdateCategoryDTO.active() != category.isActive()) {
 
-            if (category.isActive() == true) {
-                category.desactivate();
-            } else {
-                category.activate();
+                if(requestUpdateCategoryDTO.active() == true){
+                    category.desactivate();
+                }else {
+                    category.activate();
+                }
             }
-        }
 
+        }
 
         return categoryMapper.toResponseCategoryDTO(category);
     }
@@ -85,6 +93,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(long idCategory) {
+        if (!existsById(idCategory)) throw new EntityNotFoundException(String.format("La categoria con id: %d no existe", idCategory));
+
         categoryRepository.deleteById(idCategory);
     }
 
