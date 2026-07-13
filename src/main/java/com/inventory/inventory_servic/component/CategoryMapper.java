@@ -20,11 +20,19 @@ import java.util.List;
 )
 public interface CategoryMapper {
 
-//    @Mapping(target = "categoryId", ignore = true)
     Category toCategory(RequestCategoryDTO requestCategoryDTO);
-
-
-    ResponseCategoryDTO toResponseCategoryDTO( Category category);
-    Category toCategoryToUpdate(RequestUpdateCategoryDTO requestUpdateCategoryDTO);
     List<ResponseCategoryDTO> toListResponseCategoryDTO(List<Category> categoryList);
+
+
+
+    default ResponseCategoryDTO toResponseCategoryDTO( Category category){
+        return new ResponseCategoryDTO(
+                category.getId(),
+                category.getName(),
+                category.getDescription(),
+                category.getId(),
+                category.isActive(),
+                category.getCreatedAt(),
+                category.getUpdateAt());
+    }
 }
