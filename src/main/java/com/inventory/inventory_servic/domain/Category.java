@@ -2,8 +2,6 @@ package com.inventory.inventory_servic.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -23,7 +21,9 @@ public class Category {
 
     @JoinColumn(name = "parent_category_id") @ManyToOne
     private Category parentCategory;
-    private boolean isActive;
+
+    @Column(name = "is_active")
+    private boolean active;
 
     @Column(name = "created_at")
     @CreatedDate
@@ -41,12 +41,14 @@ public class Category {
 
         if(name == null ) throw  new IllegalArgumentException("El nombre de la categoria debe ser valido");
 
+        if (description == null || description.isEmpty()) throw new IllegalArgumentException("La categoria debe contener una descripcion");
+
         return new Category(name, description, parentCategory);
     }
 
 
     protected Category(){
-        this.isActive = false;
+        this.active = false;
     }
 
 
@@ -86,11 +88,11 @@ public class Category {
     }
 
     public void activate(){
-        this.isActive = true;
+        this.active = true;
     }
 
     public void desactivate() {
-        this.isActive = false;
+        this.active = false;
     }
 
 
