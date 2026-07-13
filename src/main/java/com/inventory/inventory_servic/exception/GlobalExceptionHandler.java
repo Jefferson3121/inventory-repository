@@ -20,7 +20,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
-@Order(2)
 public class GlobalExceptionHandler {
 
 
@@ -81,10 +80,15 @@ public class GlobalExceptionHandler {
 
 
 
-        @ExceptionHandler(Exception.class)
-        public ResponseEntity<ErrorResponseDTO> handleException(Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponseDTO("Error interno del servidor"));
+        @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ErrorResponseDTO> handlerDuplicateResourceException(DuplicateResourceException ex){
+
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponseDTO(ex.getMessage()));
         }
+
+
+
+
 
 
     }
