@@ -17,7 +17,7 @@ public class NetContent {
     @Enumerated(EnumType.STRING)
     private UnitMeasurement unit;
 
-    public NetContent(){}
+    protected NetContent(){}
 
 
     public NetContent(BigDecimal value, UnitMeasurement unit){
