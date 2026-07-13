@@ -6,6 +6,7 @@ public record RequestCategoryDTO(
 
         @NotBlank
         String name,
+        @NotBlank
         String description,
         long idParentCategory)
 {

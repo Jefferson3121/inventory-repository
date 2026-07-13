@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class Stock {
     private long quantity;
-    private long minQuantity;  // para alertas de reabastecimiento
+    private long minQuantity;
 
     protected Stock(){}
 

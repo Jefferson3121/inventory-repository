@@ -6,8 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public record RequestNetContentDTO(
-        @NotNull
+        @NotNull(message = "El valor para la propiedad 'value' en NetConten no debe estar vacio")
         BigDecimal value,
-        @NotNull
+        @NotNull(message = "El valor para la propiedad 'unit' en NetConten no debe estar vacio")
         UnitMeasurement unit
 ) {}
