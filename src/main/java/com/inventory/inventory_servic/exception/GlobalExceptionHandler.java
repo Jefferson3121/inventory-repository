@@ -79,12 +79,11 @@ public class GlobalExceptionHandler {
         }
 
 
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ErrorResponseDTO> handlerDuplicateResourceException(DuplicateResourceException ex) {
 
-        @ExceptionHandler(DuplicateResourceException.class)
-    public ResponseEntity<ErrorResponseDTO> handlerDuplicateResourceException(DuplicateResourceException ex){
-
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponseDTO(ex.getMessage()));
-        }
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponseDTO(ex.getMessage()));
+    }
 
 
 
