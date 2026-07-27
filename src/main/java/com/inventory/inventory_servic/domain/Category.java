@@ -19,7 +19,8 @@ public class Category {
     private String name;
     private String description;
 
-    @JoinColumn(name = "parent_category_id") @ManyToOne
+    @ManyToOne
+    @JoinColumn(name = "parent_category_id")
     private Category parentCategory;
 
     @Column(name = "is_active")
