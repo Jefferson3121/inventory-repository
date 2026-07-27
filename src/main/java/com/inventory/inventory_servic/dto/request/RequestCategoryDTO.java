@@ -8,6 +8,5 @@ public record RequestCategoryDTO(
         String name,
         @NotBlank
         String description,
-        long idParentCategory)
-{
+        long idParentCategory) {
 }
