@@ -22,11 +22,11 @@ public class Product {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-//    private String sku;
+    //private String sku;
     private String name;
 
-    @Embedded
-    private NetContent netContent;
+
+   private NetContent netContent;
 
     @JoinColumn(name = "category_id")
     @ManyToOne
