@@ -7,10 +7,7 @@ import com.inventory.inventory_servic.domain.Stock;
 import com.inventory.inventory_servic.dto.request.RequestNetContentDTO;
 import com.inventory.inventory_servic.dto.request.RequestProductDTO;
 import com.inventory.inventory_servic.dto.request.RequestStockDTO;
-import com.inventory.inventory_servic.dto.response.ResponseNetContentDTO;
-import com.inventory.inventory_servic.dto.response.ResponseProductDTO;
-import com.inventory.inventory_servic.dto.response.ResponseProductStockDTO;
-import com.inventory.inventory_servic.dto.response.ResponseStockDTO;
+import com.inventory.inventory_servic.dto.response.*;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -22,13 +19,20 @@ import org.mapstruct.Mapping;
        )
 public interface ProductMapper {
 
-//       Product toUpdateProduct(RequestUpdateProductDTO requestUpdateProductDTO);
+       //       Product toUpdateProduct(RequestUpdateProductDTO requestUpdateProductDTO);
+       @Mapping(source = "stock.quantity", target = "quantity")
+       @Mapping(source = "stock.minQuantity", target = "minQuantity")
        ResponseProductStockDTO toProductStockResponseDTO(Product product);
+
        ResponseNetContentDTO toResponseNetContentDTO(NetContent netContent);
+
        ResponseStockDTO toResponseStockDTO(Stock stock);
+
        Stock toStock(RequestStockDTO requestStockDTO);
+
        NetContent toNetContent(RequestNetContentDTO requestNetContentDTO);
 
+       ResponseProductSummaryDTO toResponseProductSummaryDTO(Product product);
 
 
        default NetContent mapNetContent(RequestNetContentDTO netContentDTO) {
