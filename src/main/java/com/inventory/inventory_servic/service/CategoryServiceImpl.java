@@ -69,9 +69,9 @@ public class CategoryServiceImpl implements CategoryService {
             if (requestUpdateCategoryDTO.active() != category.isActive()) {
 
                 if(requestUpdateCategoryDTO.active() == true){
-                    category.desactivate();
-                }else {
                     category.activate();
+                } else {
+                    category.desactivate();
                 }
             }
 
