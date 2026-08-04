@@ -22,17 +22,5 @@ public interface CategoryMapper {
 
     Category toCategory(RequestCategoryDTO requestCategoryDTO);
     List<ResponseCategoryDTO> toListResponseCategoryDTO(List<Category> categoryList);
-
-
-
-    default ResponseCategoryDTO toResponseCategoryDTO( Category category){
-        return new ResponseCategoryDTO(
-                category.getId(),
-                category.getName(),
-                category.getDescription(),
-                category.getId(),
-                category.isActive(),
-                category.getCreatedAt(),
-                category.getUpdateAt());
-    }
+    ResponseCategoryDTO toResponseCategoryDTO( Category category);
 }
