@@ -2,8 +2,6 @@ package com.inventory.inventory_servic.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.inventory.inventory_servic.domain.Category;
-import com.inventory.inventory_servic.domain.Product;
 import com.inventory.inventory_servic.repository.CategoryRepository;
 import com.inventory.inventory_servic.repository.ProductRepository;
 import org.junit.jupiter.api.*;
@@ -21,11 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -64,53 +59,6 @@ public class ProductControllerTest {
     @Autowired
     private ConfigurableEnvironment environmentt;
 
-//    @BeforeEach
-//    void cleanDatabase() {
-//        productRepository.deleteAll();
-//        categoryRepository.deleteAll();
-//    }
-
-
-
-//    @Test
-//    void print() {
-//        System.out.println( "-----" +
-//                context.getEnvironment().getProperty("mi.propiedad")
-//        );
-//    }
-
-
-
-    //    @AfterEach
-//    void after() {
-//        List<Category> lista = categoryRepository.findAll();
-//
-//        lista.forEach( ctagpry -> System.out.println("_____" + ctagpry.getName()));
-//    }
-
-
-
-
-//    @Test
-//    void printPropertySources() {
-//        environmentt.getPropertySources()
-//                .forEach(ps -> System.out.println(  "+++++++" + ps.getName()));
-//    }
-
-
-
-
-
-
-//    @Test
-//    void printConfig() {
-//        System.out.println("_________Datasource = "
-//                + environment.getProperty("spring.datasource.url"));
-//
-//        System.out.println("__________Profiles = "
-//                + Arrays.toString(environment.getActiveProfiles()));
-//    }
-
 
 
     private long createCategory(String name) throws Exception {
@@ -140,13 +88,6 @@ public class ProductControllerTest {
         fields.put("stock", Map.of("quantity", 10, "minQuantity", 2));
         return fields;
     }
-
-//    @Test
-//    void printDatasource() {
-//        System.out.println(environment.getProperty("spring.datasource.url"));
-//    }
-
-
 
 
 
