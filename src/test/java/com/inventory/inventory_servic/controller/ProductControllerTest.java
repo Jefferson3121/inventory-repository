@@ -466,18 +466,6 @@ public class ProductControllerTest {
     }
 
 
-    public void cusot(){
-
-        Field field = Product.class.getDeclaredField("name");
-
-        field.setAccessible(true);
-        field.set(Product, "jefferson");
-
-
-
-    }
-
-
 
 
     @Nested
