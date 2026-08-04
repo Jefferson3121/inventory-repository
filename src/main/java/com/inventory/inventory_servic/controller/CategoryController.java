@@ -48,15 +48,4 @@ public class CategoryController {
     public ResponseEntity<List<ResponseCategoryDTO>> getAllCategorys() {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.getAllCategorys());
     }
-
-
-
-
-
-
-
-
-
-
-
 }
