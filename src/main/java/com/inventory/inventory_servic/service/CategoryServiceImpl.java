@@ -56,7 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         if(requestUpdateCategoryDTO.description() != null) category.updateDescription(requestUpdateCategoryDTO.description());
 
-        if(requestUpdateCategoryDTO.parentCategoryId() > 0 && categoryRepository.existsById(requestUpdateCategoryDTO.parentCategoryId())){
+        if(requestUpdateCategoryDTO.parentCategoryId() > 0){
 
             Category parentCategory = categoryRepository.findById(requestUpdateCategoryDTO.parentCategoryId())
                     .orElseThrow(() -> new IllegalArgumentException(String.format("ParentCategory de Id: %d no existe", requestUpdateCategoryDTO.parentCategoryId())));

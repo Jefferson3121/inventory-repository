@@ -100,4 +100,19 @@ public class Supplier {
     public void desactivate(){
         this.active = false;
     }
+
+
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Supplier supplier)) return false;
+        return id != 0 && id == supplier.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

@@ -232,13 +232,13 @@ public class CategoryContrlollerTest {
             long categoryId = createCategory("Categoria Update Invalid Parent");
 
             String updateJson = """
-        { "parentCategoryId": 9999 }
+        { "parentCategoryId": 80000 }
         """;
 
             mockMvc.perform(patch("/category/{id}", categoryId)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(updateJson))
-                    .andExpect(status().isBadRequest()); // IllegalArgumentException -> 400
+                    .andExpect(status().isBadRequest());
         }
 
 
