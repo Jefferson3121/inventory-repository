@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 public class PurchaseOrder {
@@ -50,10 +49,20 @@ public class PurchaseOrder {
         return new PurchaseOrder(supplier, orderDate);
     }
 
+
+    protected PurchaseOrder(){
+        this.status = PurchaseOrderStatus.PENDING;
+    }
+
+
+
+
     private PurchaseOrder(Supplier supplier, LocalDate orderDate){
+
+        this();
+
         this.supplier = supplier;
         this.orderDate = orderDate;
-        this.status = PurchaseOrderStatus.PENDING;
     }
 
     public void markAsReceived(){
@@ -62,7 +71,7 @@ public class PurchaseOrder {
         this.status = PurchaseOrderStatus.RECEIVED;
     }
 
-    public void markSsCancelled(){
+    public void marksCancelled(){
         if (this.status != PurchaseOrderStatus.PENDING)
             throw new IllegalArgumentException("Solo se puede cancelar una orden que está pendiente");
         this.status = PurchaseOrderStatus.CANCELLED;
@@ -70,11 +79,21 @@ public class PurchaseOrder {
 
 
 
-    public void editSupplier(Supplier supplier){
+    public void updateSupplier(Supplier supplier){
 
         if (status != PurchaseOrderStatus.PENDING) throw new IllegalStateException("No puede editar el proveedor de una orden de compra en estado recibido o cancelado");
 
         this.supplier = supplier;
+    }
+
+
+
+    public void updateOrderDate(LocalDate orderDate){
+        if (this.status != PurchaseOrderStatus.PENDING) throw new IllegalStateException("No puede modificar la fecha de una orden en estado confirmado o cancelado");
+
+        if (orderDate == null) throw new IllegalArgumentException("La fecha de orden de compra es null");
+
+        this.orderDate = orderDate;
     }
 
 
@@ -86,9 +105,11 @@ public class PurchaseOrder {
     }
 
 
-    public void deletePurchasedetail(long idPurcharseDetail){
+    public void isDeletePurchasedetail(long idPurcharseDetail){
         if (status != PurchaseOrderStatus.PENDING) throw new IllegalStateException("No puede eliminar un detalle de una compra en estado aprobado o cancelado");
     }
+
+
 
 
 
