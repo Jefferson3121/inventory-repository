@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 public class Sale {
@@ -19,19 +19,25 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "customer_name")
-    private String customerName;
+    @Column(name = "amount_collected")
+    private BigDecimal amountCollected;
 
     @Column(name = "sale_date")
     @CreatedDate
     private LocalDateTime saleDate;
 
-    public static Sale createSale(String customerName){
-        return new Sale(customerName);
-    }
 
-    private Sale(String customerName){
-        this.customerName = customerName;
+
+
+
+    public Sale(){}
+
+
+    public SaleDetail addSaleDatil(Product product, Batch batch, BigDecimal quantity, BigDecimal unitPrice){
+
+         return SaleDetail.createSaleDetail(this, product,batch, quantity, unitPrice);
+
+
     }
 
     @Override
