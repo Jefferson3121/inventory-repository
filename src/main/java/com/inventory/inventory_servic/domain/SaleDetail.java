@@ -30,12 +30,12 @@ public class SaleDetail {
     @JoinColumn(name = "batch_id")
     private Batch batch;
 
-    private long quantity;
+    private BigDecimal quantity;
 
     @Column(name = "unit_price")
     private BigDecimal unitPrice;
 
-    public static SaleDetail createSaleDetail(Sale sale, Product product, Batch batch, long quantity, BigDecimal unitPrice){
+    public static SaleDetail createSaleDetail(Sale sale, Product product, Batch batch, BigDecimal quantity, BigDecimal unitPrice){
 
         List<String> camposVacios = new ArrayList<>();
 
@@ -44,10 +44,11 @@ public class SaleDetail {
         if (batch == null)     camposVacios.add("batch");
         if (unitPrice == null) camposVacios.add("unitPrice");
 
+
         if (!camposVacios.isEmpty())
             throw new IllegalArgumentException("Error al crear detalle de venta: Los siguientes campos son obligatorios: " + String.join(", ", camposVacios));
 
-        if (quantity <= 0)
+        if (quantity.compareTo(BigDecimal.ZERO) <= 0)
             throw new IllegalArgumentException("La cantidad debe ser mayor a cero");
 
         if (unitPrice.compareTo(BigDecimal.ZERO) < 0)
@@ -56,7 +57,7 @@ public class SaleDetail {
         return new SaleDetail(sale, product, batch, quantity, unitPrice);
     }
 
-    private SaleDetail(Sale sale, Product product, Batch batch, long quantity, BigDecimal unitPrice){
+    private SaleDetail(Sale sale, Product product, Batch batch, BigDecimal quantity, BigDecimal unitPrice){
         this.sale = sale;
         this.product = product;
         this.batch = batch;
