@@ -60,6 +60,9 @@ public class PurchaseDetail {
         return new PurchaseDetail(purchaseOrder, product,batch, quantity, unitPrice);
     }
 
+
+
+
     private PurchaseDetail(PurchaseOrder purchaseOrder, Product product,Batch batch, BigDecimal quantity, BigDecimal unitPrice){
         this.purchaseOrder = purchaseOrder;
         this.product = product;
@@ -68,10 +71,9 @@ public class PurchaseDetail {
         this.unitPrice = unitPrice;
     }
 
-//    public void assignBatch(Batch batch){
-//        if (batch == null) throw new IllegalArgumentException("El lote debe ser un valor válido");
-//        this.batch = batch;
-//    }
+
+
+
 
     @Override
     public boolean equals(Object o) {
