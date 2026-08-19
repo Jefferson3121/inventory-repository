@@ -35,14 +35,14 @@ public class PurchaseDetail {
     @Column(name = "unit_price")
     private BigDecimal unitPrice;
 
-    public static PurchaseDetail createPurchaseDetail(PurchaseOrder purchaseOrder, Product product,Batch batch, BigDecimal quantity, BigDecimal unitPrice){
+    public static PurchaseDetail createPurchaseDetail(PurchaseOrder purchaseOrder, Product product, BigDecimal quantity, BigDecimal unitPrice){
 
         List<String> camposVacios = new ArrayList<>();
 
         if (purchaseOrder == null) camposVacios.add("purchaseOrder");
         if (product == null)       camposVacios.add("product");
         if (unitPrice == null)     camposVacios.add("unitPrice");
-        if (batch == null) camposVacios.add("bach");
+
 
         if (!camposVacios.isEmpty())
             throw new IllegalArgumentException("Error al crear detalle de compra: Los siguientes campos son obligatorios: " + String.join(", ", camposVacios));
@@ -55,18 +55,15 @@ public class PurchaseDetail {
 
 
 
-        if (batch.getProduct() != product)  throw new IllegalArgumentException("El lote no pertenece a ese producto");
-
-        return new PurchaseDetail(purchaseOrder, product,batch, quantity, unitPrice);
+        return new PurchaseDetail(purchaseOrder, product, quantity, unitPrice);
     }
 
 
 
 
-    private PurchaseDetail(PurchaseOrder purchaseOrder, Product product,Batch batch, BigDecimal quantity, BigDecimal unitPrice){
+    private PurchaseDetail(PurchaseOrder purchaseOrder, Product product, BigDecimal quantity, BigDecimal unitPrice){
         this.purchaseOrder = purchaseOrder;
         this.product = product;
-        this.batch = batch;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
     }
