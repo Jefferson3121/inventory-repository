@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class StockMovement {
     @Enumerated(EnumType.STRING)
     private MovementReason reason;
 
-    private long quantity;
+    private BigDecimal quantity;
 
     private String notes;
 
@@ -39,7 +40,7 @@ public class StockMovement {
     @CreatedDate
     private LocalDateTime movementDate;
 
-    public static StockMovement createStockMovement(Batch batch, MovementType type, MovementReason reason, long quantity, String notes){
+    public static StockMovement createStockMovement(Batch batch, MovementType type, MovementReason reason, BigDecimal quantity, String notes){
 
         List<String> camposVacios = new ArrayList<>();
 
@@ -50,7 +51,7 @@ public class StockMovement {
         if (!camposVacios.isEmpty())
             throw new IllegalArgumentException("Error al registrar movimiento de stock: Los siguientes campos son obligatorios: " + String.join(", ", camposVacios));
 
-        if (quantity <= 0)
+        if (quantity.compareTo(BigDecimal.ZERO) <= 0)
             throw new IllegalArgumentException("La cantidad del movimiento debe ser mayor a cero");
 
         if (type == MovementType.IN)
@@ -61,7 +62,7 @@ public class StockMovement {
         return new StockMovement(batch, type, reason, quantity, notes);
     }
 
-    private StockMovement(Batch batch, MovementType type, MovementReason reason, long quantity, String notes){
+    private StockMovement(Batch batch, MovementType type, MovementReason reason, BigDecimal quantity, String notes){
         this.batch = batch;
         this.type = type;
         this.reason = reason;
