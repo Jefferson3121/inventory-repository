@@ -101,7 +101,7 @@ public class PurchaseOrder {
 
     public PurchaseDetail addPurchaseDetail(Product product, Batch batch, BigDecimal quantity, BigDecimal unitPrice){
 
-        return PurchaseDetail.createPurchaseDetail(this,product, batch, quantity, unitPrice);
+        return PurchaseDetail.createPurchaseDetail(this, product, quantity, unitPrice);
     }
 
 
