@@ -47,7 +47,7 @@ public class Product {
 
 
 
-    public static Product createProduct(/*String sku,**/ String name, NetContent netContent, Category category, BigDecimal price, String description, String brand, Stock stock){
+    public static Product createProduct(/*String sku,**/ String name, NetContent netContent, Category category, BigDecimal price, String brand){
 
         List<String> camposVacios = new ArrayList<>();
 
@@ -57,7 +57,7 @@ public class Product {
         if (category == null)   camposVacios.add("category");
         if (price == null)      camposVacios.add("price");
         if (brand == null)      camposVacios.add("brand");
-        if (stock == null)      camposVacios.add("stock");
+//        if (stock == null)      camposVacios.add("stock");
 
         if (!camposVacios.isEmpty())
             throw new IllegalArgumentException("Error al crear un nuevo producto: Los siguientes campos son obligatorios: " + String.join(", ", camposVacios));
@@ -67,11 +67,11 @@ public class Product {
         String normalizedName = Product.normalize(name);
         String normalizedBrand = Product.normalize(brand);
 
-        return new Product(/*sku**/ normalizedName, netContent, category, price, description, normalizedBrand, stock);
+        return new Product(/*sku**/ normalizedName, netContent, category, price, normalizedBrand);
 
     }
 
-    private Product(/*String sku,**/ String name, NetContent netContent, Category category, BigDecimal price, String description, String brand, Stock stock){
+    private Product(/*String sku,**/ String name, NetContent netContent, Category category, BigDecimal price, String brand){
 
 
 //        this.sku = sku;
@@ -79,9 +79,9 @@ public class Product {
         this.netContent = netContent;
         this.category = category;
         this.price = price;
-        this.description = description;
+//        this.description = description;
         this.brand = brand;
-        this.stock = stock;
+//        this.stock = stock;
 
     }
 
