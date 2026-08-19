@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Category {
+public class   Category {
 
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,13 +38,14 @@ public class Category {
 
 
 
-    public static Category createCategory(String name, String description, Category parentCategory){
+    public static Category createCategory(String name, String description){
 
         if(name == null ) throw  new IllegalArgumentException("El nombre de la categoria debe ser valido");
 
         if (description == null || description.isEmpty()) throw new IllegalArgumentException("La categoria debe contener una descripcion");
 
-        return new Category(name, description, parentCategory);
+        return  new Category(name, description);
+
     }
 
 
@@ -56,12 +57,12 @@ public class Category {
 
 
 
-    public Category(String name, String description, Category parentCategory){
+    public Category(String name, String description){
         this();
 
         this.name = name;
         this.description = description;
-        this.parentCategory = parentCategory;
+
     }
 
 
