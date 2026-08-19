@@ -43,10 +43,14 @@ public class ProductServiceImpl implements ProductService{
 
 
 
+
+
         Category category = categoryRepository.findById(requestProductDTO.categoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Categoría con id " + requestProductDTO.categoryId() + " no existe"));
 
         Product product = productMapper.toProduct(requestProductDTO, category);
+
+        if (requestProductDTO.description() != null) product.updateDescription(requestProductDTO.description());
 
         return productMapper.toResponseProduct(productRepository.save(product));
     }
