@@ -3,12 +3,13 @@ package com.inventory.inventory_servic.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,14 +31,36 @@ public class Sale {
 
 
 
-    public Sale(){}
+    protected Sale(){}
+
+
+    private Sale(BigDecimal amountCollected, LocalDateTime saleDate){
+        this.amountCollected = amountCollected;
+        this.saleDate = saleDate;
+    }
+
+
+
+    public static Sale createSale(BigDecimal amountCollected, LocalDateTime saleDate){
+
+        List<String> emptyfields = new ArrayList<>();
+
+        if (amountCollected == null) emptyfields.add("amountCollected");
+        if (saleDate == null) emptyfields.add("saleDate");
+
+
+        if (!emptyfields.isEmpty()) throw new IllegalArgumentException("Error al crear un nuevo lote: Los siguientes campos son obligatorios: " + String.join(", ", emptyfields));
+
+
+        return new Sale(amountCollected, saleDate);
+    }
+
+
 
 
     public SaleDetail addSaleDatil(Product product, Batch batch, BigDecimal quantity, BigDecimal unitPrice){
 
          return SaleDetail.createSaleDetail(this, product,batch, quantity, unitPrice);
-
-
     }
 
     @Override
