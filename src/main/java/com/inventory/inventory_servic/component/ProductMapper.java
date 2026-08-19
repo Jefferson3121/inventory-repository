@@ -53,9 +53,7 @@ public interface ProductMapper {
                       toNetContent(requestProductDTO.netContent()),
                       category,
                       requestProductDTO.price(),
-                      requestProductDTO.description(),
-                      requestProductDTO.brand(),
-                      toStock(requestProductDTO.stock())
+                      requestProductDTO.brand()
               );
 
        }
